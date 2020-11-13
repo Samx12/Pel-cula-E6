@@ -3,35 +3,29 @@ import 'dart:convert';
 
 import 'package:pelicula/src/models/pelicula_model.dart';
 
+class PeliculasProvider {
 
-
-class PeliculasProvider{
-
-  String _apikey = '1865f43a0549ca50d341dd9ab8b29f49';
-  String _url = 'api.themoviedb.org';
+  String _apikey  = 'eb481cd840ce63651ad0a9ae44d96b53';
+  String _url     = 'api.themoviedb.org';
   String _language = 'es-ES';
 
+     Future<List<Pelicula>> getEnCines() async {
 
-    Future<List<Pelicula>> getEnCines() async {
+       final url = Uri.https(_url, '3/movie/now_playing', {
+         'api_key'   : _apikey,
+          'language' : _language
 
-      final url = Uri.https(_url, '3/movie/now_playing',{
+       });
 
-        '_apikey'  : _apikey,
-        'language' : _language
-      });
+       final resp = await http.get(url);
+       final decodedData = json.decode(resp.body);
 
-      final resp = await http.get( url );
-      final decodedData = json.decode(resp.body);
-
-      final peliculas = new Peliculas.fromJsonList(decodedData['results']);
-
-      print( peliculas.items[0].title );
-
-      return peliculas.items;
-
-
-    }
-
-
-
+       final peliculas = new Peliculas.fromJsonList(decodedData['results']);
+       
+       print ( peliculas.items[1].title);
+       
+       return peliculas.items;
+      
+     }
+     
 }

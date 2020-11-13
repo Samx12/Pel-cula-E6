@@ -3,7 +3,6 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 
 class CardSwiper extends StatelessWidget {
 
-
   final List<dynamic> peliculas;
 
   CardSwiper ( { @required this.peliculas} );
@@ -13,9 +12,8 @@ class CardSwiper extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final _screenSize = MediaQuery.of(context).size;
-
-
-   return Container(
+    
+    return Container(
       padding: EdgeInsets.only(top: 10.0),
       child: Swiper(
         layout: SwiperLayout.STACK,
