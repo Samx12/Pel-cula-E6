@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:pelicula/src/providers/peliculas_provider.dart';
 // import 'package:flutter_swiper/flutter_swiper.dart';
@@ -24,8 +26,10 @@ final peliculasProvider = new PeliculasProvider();
       ),
       body: Container(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            _swiperTarjetas()
+            _swiperTarjetas(),
+            _footer(context)
           ],
           ),
       )
@@ -59,5 +63,28 @@ final peliculasProvider = new PeliculasProvider();
     //  peliculas: [1,2,3,4,5],
    // );
  } 
+
+
+Widget _footer(BuildContext context){
+  return Container(
+    width: double.infinity,
+    child : Column(
+      children:<Widget>[
+        Text('Populares' , style: Theme.of(context).textTheme.subhead,),
+
+              FutureBuilder(
+                future: peliculasProvider.getPopulares(),
+                builder: (BuildContext context , AsyncSnapshot<List>snapshop ){
+
+                  snapshop.data?.forEach((p) => print(p.title));
+                  return Container();
+
+                }
+
+              ),
+      ],
+    ),
+  );
+}
 
 }
