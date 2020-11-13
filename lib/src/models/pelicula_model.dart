@@ -72,5 +72,13 @@ class Pelicula {
 
   }
 
+getPosterImg(){
 
+
+  if(posterPath == null){
+    return 'https://za.toluna.com/dpolls_images/2017/07/08/26ad3db0-1aac-4a9e-a692-561e9fa871aa_x365.jpg';
+  }else{
+  return'https://image.tmdb.org/t/p/w500/$posterPath';
+}
+}
 }
