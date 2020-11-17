@@ -48,7 +48,7 @@ class PeliculasProvider {
        
 
        final url = Uri.https(_url, '3/movie/now_playing', {
-         _popularesPage++;
+        
          'api_key'   : _apikey,
           'language' : _language
           
