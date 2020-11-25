@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:pelicula/src/providers/peliculas_provider.dart';
 import 'package:pelicula/src/search/search_delegate.dart';
@@ -9,14 +7,13 @@ import 'package:pelicula/src/widgets/movie_horizontal.dart';
 
 
 class HomePage extends StatelessWidget {
+  
+  final peliculasProvider = new PeliculasProvider();
 
-final peliculasProvider = new PeliculasProvider();
-
-  @override 
+  @override
   Widget build(BuildContext context) {
 
     peliculasProvider.getPopulares();
-
 
     return Scaffold(
       appBar: AppBar(
@@ -27,10 +24,11 @@ final peliculasProvider = new PeliculasProvider();
           IconButton(
             icon: Icon( Icons.search ),
             onPressed: (){
-              showSearch(context: context, 
-              delegate: DataSearch(),
-              // query: 'Hola'
-              );
+              showSearch( 
+                context: context, 
+                delegate: DataSearch(), 
+                // query: 'Hola'
+                );
             },
           )
         ],
@@ -49,62 +47,60 @@ final peliculasProvider = new PeliculasProvider();
   }
 
 
-  Widget _swiperTarjetas() {
-    
-    return FutureBuilder(
-      future: peliculasProvider.getEnCines(),
-    
-      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+   Widget _swiperTarjetas() {
 
-        if(snapshot.hasData){
-          return CardSwiper(peliculas: snapshot.data);
-        }else{
-       return Container(
-         child: Center(
-           child: CircularProgressIndicator()));
+  return FutureBuilder(
+    future: peliculasProvider.getEnCines(),
+    builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
     
+    if (snapshot.hasData) {
+     
+     return CardSwiper(peliculas: snapshot.data);
+
+    }else{
+      return Container(
+        height: 400.0,
+        child: Center (
+          child: CircularProgressIndicator()
+      )
+      );
     }
-      },
-    );
-    
-    
-        //peliculasProvider.getEnCines();
-
-    //return CardSwiper(
-    //  peliculas: [1,2,3,4,5],
-   // );
+   },
+  );  
  } 
 
+  Widget _footer( BuildContext context){
 
-Widget _footer(BuildContext context){
-  return Container(
-    width: double.infinity,
-    child : Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children:<Widget>[
-        Container(
-          padding: EdgeInsets.only(left: 20),
-          child: Text('Populares' , style: Theme.of(context).textTheme.subhead,)),
-                SizedBox(height: 5.0),
-              StreamBuilder(
-                stream: peliculasProvider.popularesStream,
-                builder: (BuildContext context , AsyncSnapshot<List>snapshop ){
+    return Container(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(left: 20.0),
+            child: Text ('Populares', style: Theme.of(context).textTheme.subtitle1)
+            ),
+          SizedBox(height: 5.0,),
 
-                  if (snapshop.hasData) {
-                    return MovieHorizontal(
-                      peliculas: snapshop.data,
-                      siguientePagina: peliculasProvider.getPopulares,
-                      );
-                  } else {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  
+          StreamBuilder(
+            stream: peliculasProvider.popularesStream,
+            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
 
-                },
-              ),
-      ],
-    ),
-  );
-}
+              if (snapshot.hasData){
+                return MovieHorizontal(
+                  peliculas: snapshot.data,
+                  siguientePagina: peliculasProvider.getPopulares,
+                  );
+              }else{
+              return Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
+
+
+        ],
+        ),
+    );
+  }
 
 }

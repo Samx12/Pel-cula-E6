@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:pelicula/src/models/actores_model.dart';
 import 'package:pelicula/src/models/pelicula_model.dart';
 
