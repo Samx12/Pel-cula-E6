@@ -76,7 +76,7 @@ class DataSearch extends SearchDelegate {
     }
 
     return FutureBuilder(
-      future: peliculasProvider.buscarPelicula(query),
+      future: peliculasProvider.BuscarPelicula(query),
       builder: (BuildContext context, AsyncSnapshot<List<Pelicula>> snapshot) {
 
           if( snapshot.hasData ) {

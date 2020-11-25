@@ -7,73 +7,102 @@ import 'dart:convert';
 import 'package:pelicula/src/models/pelicula_model.dart';
 
 class PeliculasProvider {
-  String _apikey = 'eb481cd840ce63651ad0a9ae44d96b53';
-  String _url = 'api.themoviedb.org';
+
+  String _apikey  = 'eb481cd840ce63651ad0a9ae44d96b53';
+  String _url     = 'api.themoviedb.org';
   String _language = 'es-ES';
 
-  int _popularesPage = 0;
-  bool _cargando = false;
+    int _popularesPage = 0;
+    bool _cargando = false;
 
-  List<Pelicula> _populares = new List();
 
-  final _popularesStreamController =
-      StreamController<List<Pelicula>>.broadcast();
+    List<Pelicula> _populares = new List();
 
-  Function(List<Pelicula>) get popularesSink =>
-      _popularesStreamController.sink.add;
+    final _popularesStreamController = StreamController<List<Pelicula>>.broadcast();
 
-  Stream<List<Pelicula>> get popularesStream =>
-      _popularesStreamController.stream;
+    Function(List<Pelicula>) get popularesSink => _popularesStreamController.sink.add;
 
-  void disposeStreams() {
-    _popularesStreamController?.close();
-  }
+    Stream<List<Pelicula>> get popularesStream => _popularesStreamController.stream;
 
-  Future<List<Pelicula>> _procesarRespuesta(Uri url) async {
+    void disposeStreams(){
+      _popularesStreamController?.close();
+    }
+
+  Future<List<Pelicula>> _procesarRespuesta(Uri url) async{
     final resp = await http.get(url);
-    final decodedData = json.decode(resp.body);
+       final decodedData = json.decode(resp.body);
 
-    final peliculas = new Peliculas.fromJsonList(decodedData['results']);
-    ;
+       final peliculas = new Peliculas.fromJsonList(decodedData['results']);
 
-    return peliculas.items;
+       return peliculas.items;
+    
   }
 
-  Future<List<Pelicula>> getEnCines() async {
-    final url = Uri.https(_url, '3/movie/now_playing',
-        {'api_key': _apikey, 'language': _language});
-  }
+     Future<List<Pelicula>> getEnCines() async {
 
-  Future<List<Pelicula>> getPopulares() async {
-    if (_cargando) return [];
+       final url = Uri.https(_url, '3/movie/now_playing', {
+         'api_key'   : _apikey,
+          'language' : _language
 
-    _cargando = true;
+       });
 
-    _popularesPage++;
+       return await _procesarRespuesta(url);
+      
+     }
 
-    final url = Uri.https(_url, '3/movie/Popular', {
-      'api_key': _apikey,
-      'language': _language,
-      'page': _popularesPage.toString()
-    });
+     
+     Future<List<Pelicula>> getPopulares() async{
 
-    final resp = await _procesarRespuesta(url);
+       if( _cargando ) return [];
 
-    _populares.addAll(resp);
-    popularesSink(_populares);
-    _cargando = false;
-    return resp;
-  }
+       _cargando = true;
 
-  Future<List<Actor>> getCast(String peliId) async {
-    final url = Uri.https(_url, '3/movie/$peliId/credits',
-        {'api_key': _apikey, 'language': _language});
+       _popularesPage++;
 
-    final resp = await http.get(url);
-    final decodedData = json.decode(resp.body);
 
-    final cast = new Cast.fromJsonList(decodedData['cast']);
+       final url = Uri.https(_url, '3/movie/popular', {
+         'api_key'   : _apikey,
+          'language' : _language,
+          'page'     : _popularesPage.toString()
 
-    return cast.actores;
-  }
+       });
+
+       final resp = await _procesarRespuesta(url);
+
+       _populares.addAll(resp);
+       popularesSink( _populares );
+
+       _cargando = false;
+       return resp;
+     }
+
+
+     Future<List<Actor>> getCast( String peliId ) async {
+
+       final url = Uri.https(_url, '3/movie/$peliId/credits',{
+         'api_key'   : _apikey,
+          'language' : _language
+       });
+
+
+       final resp = await http.get(url);
+       final decodedData = json.decode(resp.body);
+
+       final cast = new Cast.fromJsonList(decodedData['cast']);
+       return cast.actores;
+     }
+
+     Future<List<Pelicula>> BuscarPelicula( String query ) async {
+
+       final url = Uri.https(_url, '3/search/movie', {
+         'api_key'  : _apikey,
+         'language' : _language,
+          'query'   : query
+  
+       });
+
+       return await _procesarRespuesta(url);
+      
+     }
+     
 }

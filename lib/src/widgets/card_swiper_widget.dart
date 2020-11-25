@@ -23,7 +23,7 @@ class CardSwiper extends StatelessWidget {
           itemBuilder: (BuildContext context,int index){
 
 
-            peliculas[index].uniqueId = '$ { peliculas[index].id }-tarjeta';
+            peliculas[index].uniqueId = '${ peliculas[index].id }-tarjeta';
 
 
             return Hero(
